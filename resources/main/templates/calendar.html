@@ -1,0 +1,118 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--<meta charset="UTF-8">-->
+<!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--<title>Calendar</title>-->
+<!--<iframe src="https://calendar.google.com/calendar/embed?src=disistherealtwig%40gmail.com&ctz=America%2FChicago" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Calendar</title>
+    <style>
+        /* Basic styling for the calendar */
+        #calendar {
+            font-family: Arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        #calendar th, #calendar td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        #calendar th {
+            background-color: #f2f2f2;
+        }
+        #calendar td {
+            height: 100px;
+            vertical-align: top;
+        }
+        #calendar-label {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h2 id="calendar-label">My Schedule</h2>
+
+<table id="calendar">
+    <thead>
+    <tr>
+        <th>Sunday</th>
+        <th>Monday</th>
+        <th>Tuesday</th>
+        <th>Wednesday</th>
+        <th>Thursday</th>
+        <th>Friday</th>
+        <th>Saturday</th>
+    </tr>
+    </thead>
+    <tbody id="calendar-body">
+    <!-- Calendar content will be populated here -->
+    </tbody>
+</table>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetchTasks();
+    });
+
+    function fetchTasks() {
+        // Replace 'your-backend-endpoint' with your actual backend endpoint
+        fetch('/mySchedule')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('calendar-label').innerText = "My Schedule";
+                populateCalendar(data);
+            })
+            .catch(error => console.error('Error fetching tasks:', error));
+    }
+
+    function populateCalendar(tasks) {
+        const calendarBody = document.getElementById('calendar-body');
+
+        tasks.forEach(task => {
+            const startDate = new Date(task.start_date);
+            const endDate = new Date(task.goal);
+
+            const startDay = startDate.getDate();
+            const endDay = endDate.getDate();
+            const startMonth = startDate.getMonth();
+            const endMonth = endDate.getMonth();
+
+            const startCell = calendarBody.rows[startDay - 1].cells[startMonth];
+            const endCell = calendarBody.rows[endDay - 1].cells[endMonth];
+
+            const taskElement = document.createElement('div');
+            taskElement.innerHTML = `<strong>${task.title}</strong><br>${task.description}<br>Goal Date: ${task.goal_date}<br>Category: ${task.category}`;
+            taskElement.style.background = '#f0f0f0';
+            taskElement.style.padding = '5px';
+            taskElement.style.marginBottom = '5px';
+
+            if (startCell === endCell) {
+                startCell.appendChild(taskElement);
+            } else {
+                const range = document.createRange();
+                range.setStartAfter(startCell);
+                range.setEndBefore(endCell);
+                const rangeFragment = range.extractContents();
+                range.insertNode(taskElement);
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
+
+
+
