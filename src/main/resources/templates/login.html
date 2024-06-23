@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login to Gamify</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 20px;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, h1, h2, h3, p, ul, li {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f0f6;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #6a0dad;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #ffd700;
+        }
+
+        .content {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        form {
+            display: flex;
+            margin-top: 20px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #6a0dad;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #4b0082;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        footer {
+            background-color: #6a0dad;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #ffd700;
+        }
+
+        .content {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        form {
+            display: flex;
+            margin-top: 20px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #6a0dad;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #4b0082;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        footer {
+            background-color: #6a0dad;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #6a0dad;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #4b0082;
+        }
+
+        /* Hide the registration form initially */
+        #registrationForm {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Login to Gamify</h1>
+    <nav>
+        <a href="index">Home</a> |
+        <a href="login">Login</a> |
+        <a href="taskHome">Tasks</a>
+    </nav>
+</header>
+
+<div class="container">
+    <form id="loginForm">
+        <div class="form-container">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+
+        <div class="form-container">
+            <label for="password">Password:</label>
+            <input type="text" id="password" name="password" required>
+        </div>
+
+        <div class="form-container">
+            <input type="submit" value="Login">
+        </div>
+    </form>
+
+    <!-- Registration Form -->
+    <form id="registrationForm">
+        <div class="form-container">
+            <label for="newUsername">New Username:</label>
+            <input type="text" id="newUsername" name="newUsername" required>
+        </div>
+        <div class="form-container">
+            <label for="newPassword">New Password:</label>
+            <input type="password" id="newPassword" name="newPassword" required>
+        </div>
+        <div class="form-container">
+            <input type="submit" value="Register">
+        </div>
+    </form>
+
+    <div id="loginMessage"></div>
+</div>
+
+<footer>
+    <p>CS 222 Project by Kay, Max, Sathvik, and Kinjal</p>
+</footer>
+
+<script>
+    // Function to show the registration form and hide the login form
+    function showRegistrationForm() {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('registrationForm').style.display = 'block';
+    }
+
+    // Function to show the login form and hide the registration form
+    function showLoginForm() {
+        document.getElementById('registrationForm').style.display = 'none';
+        document.getElementById('loginForm').style.display = 'block';
+    }
+
+    // Function to redirect to the taskHome page
+    function redirectToTaskHome() {
+        window.location.href = "taskHome"; // Redirect to the taskHome page
+    }
+
+    // Show registration form if login fails
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
+        localStorage.setItem("username",document.getElementById('username').value);
+        localStorage.setItem("password", document.getElementById('password').value);
+
+        // Send login data to the server
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/loginform");
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                var response = JSON.parse(xhr.responseText);
+                if (xhr.status === 202) {
+                    document.getElementById('loginMessage').textContent = "Login successful! Redirecting...";
+                    showLoginForm(); // Hide registration form on successful login
+                    setTimeout(redirectToTaskHome, 2500); // Redirect to taskHome after 4 seconds
+                } else {
+                    document.getElementById('loginMessage').textContent = "Login failed. Please create an account.";
+                    showRegistrationForm(); // Display registration form on failed login
+                }
+            }
+        };
+        var UserCredentials = {
+            username: document.getElementById('username').value,
+            password: document.getElementById('password').value
+        }
+        xhr.send(JSON.stringify(UserCredentials));
+    });
+
+    // Registration Form Submit Event
+    document.getElementById('registrationForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
+        var newUsername = document.getElementById('newUsername').value;
+        var newPassword = document.getElementById('newPassword').value;
+
+        // Send registration data to the server
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/register");
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                var response = JSON.parse(xhr.responseText);
+                if (xhr.status === 202) {
+                    document.getElementById('loginMessage').textContent = "Account created successfully!";
+                    showLoginForm(); // Show login form after successful registration
+                    // Clear login failed message
+                } else {
+                    document.getElementById('loginMessage').textContent = "Failed to create account. Please try again.";
+                }
+            }
+        };
+        var UserCredentials = {
+            username: newUsername,
+            password: newPassword
+        }
+        xhr.send(JSON.stringify(UserCredentials));
+    });
+
+</script>
+</body>
+</html>

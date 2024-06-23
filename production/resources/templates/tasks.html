@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Tasks - Gamify</title>
+    <style>
+
+        body, h1, h2, h3, p, ul, li {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f0f6;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #6a0dad;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #ffd700;
+        }
+
+        .content {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        form {
+            display: flex;
+            margin-top: 20px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="date"] {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: 'Arial', sans-serif;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #6a0dad;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #4b0082;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        footer {
+            background-color: #6a0dad;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        #taskContainer {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            color: #fff;
+            background-color: #6a0dad;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #4b0082;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        select {
+            width: calc(100% - 24px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #6a0dad;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+            font-size: 16px;
+        }
+
+        .progress-input {
+            width: calc(100% - 24px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #6a0dad;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Manage Tasks</h1>
+    <nav>
+        <a href="index.html">Home</a> |
+        <a href="login.html">Login</a> |
+        <a href="tasks.html">Tasks</a>
+    </nav>
+</header>
+
+<!-- Task Section -->
+<div id="taskContainer">
+    <!-- Tasks will be added here -->
+</div>
+<button onclick="addTask()">Add Task</button>
+
+<footer>
+    <p>CS 222 Project by Kay, Max, Sathvik, and Kinjal</p>
+</footer>
+
+<script>
+    function addTask() {
+        var taskContainer = document.getElementById('taskContainer');
+
+        // Create task container
+        var taskDiv = document.createElement('div');
+        taskDiv.classList.add('task');
+
+        // Task name input
+        var nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.placeholder = 'Task Name';
+
+        // Description input
+        var descriptionInput = document.createElement('input');
+        descriptionInput.type = 'text';
+        descriptionInput.placeholder = 'Description';
+
+        // Goal date input
+        var goalDateInput = document.createElement('input');
+        goalDateInput.type = 'date';
+        goalDateInput.placeholder = 'Goal Date';
+
+        // Progress input
+        var progressInput = document.createElement('input');
+        progressInput.type = 'text';
+        progressInput.placeholder = 'Current Progress %';
+        progressInput.classList.add('progress-input');
+
+        // Category select
+        var categorySelect = document.createElement('select');
+        var categories = ['Work', 'Study', 'Personal', 'Other'];
+        categories.forEach(category => {
+            var option = document.createElement('option');
+            option.text = category;
+            option.value = category;
+            categorySelect.appendChild(option);
+        });
+
+        // Save button
+        var saveButton = document.createElement('button');
+        saveButton.textContent = 'Save Task';
+        saveButton.classList.add('btn');
+        saveButton.onclick = function () {
+            saveTask(taskDiv);
+        };
+
+        // Add elements to task container
+        taskDiv.appendChild(nameInput);
+        taskDiv.appendChild(descriptionInput);
+        taskDiv.appendChild(goalDateInput);
+        taskDiv.appendChild(progressInput);
+        taskDiv.appendChild(categorySelect);
+        taskDiv.appendChild(saveButton);
+
+        // Append task container to taskContainer
+        taskContainer.appendChild(taskDiv);
+
+        // Create and append horizontal line
+        var hr = document.createElement('hr');
+        taskContainer.appendChild(hr);
+    }
+
+    function saveTask(taskDiv) {
+        var name = taskDiv.querySelector('input[type="text"]').value;
+        var description = taskDiv.querySelector('input[type="text"]').value;
+        var goalDate = taskDiv.querySelector('input[type="date"]').value;
+        var progress = taskDiv.querySelector('.progress-input').value;
+        var category = taskDiv.querySelector('select').value;
+        var task = {
+            name: name,
+            description: description,
+            goalDate: goalDate,
+            progress: progress,
+            category: category
+        };
+
+        // Send task data to the server
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/tasks");
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.send(JSON.stringify(task));
+    }
+
+        // Function to fetch tasks from the backend
+        function fetchTasks() {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+        var tasks = JSON.parse(xhr.responseText);
+        tasks.forEach(function(task) {
+        addTask(task);
+    });
+    } else {
+        console.error('Failed to fetch tasks: ' + xhr.status);
+    }
+    }
+    };
+        xhr.open('GET', '/tasks');
+        xhr.send();
+    }
+
+        // Function to save a task
+        function saveTask(taskDiv) {
+        var name = taskDiv.querySelector('input[type="text"]').value;
+        var description = taskDiv.querySelector('input[type="text"]').value;
+        var goalDate = taskDiv.querySelector('input[type="date"]').value;
+        var progress = taskDiv.querySelector('.progress-input').value;
+        var category = taskDiv.querySelector('select').value;
+        var task = {
+        name: name,
+        description: description,
+        goalDate: goalDate,
+        progress: progress,
+        category: category
+    };
+
+        // Send task data to the server
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/tasks");
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.send(JSON.stringify(task));
+    }
+
+        // Call fetchTasks() when the page loads
+        window.onload = function() {
+        fetchTasks();
+    };
+</script>
+</body>
+</html>

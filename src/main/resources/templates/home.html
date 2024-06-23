@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schedule Planner</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .task {
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .task input[type="text"], .task input[type="date"], .task select {
+      margin-right: 10px;
+    }
+    .btn {
+      padding: 8px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #registrationSection {
+      display: none; /* Initially hide the registration section */
+    }
+  </style>
+</head>
+<body>
+<h1>Schedule Planner</h1>
+
+<!-- Login Section -->
+<div id="loginSection">
+  <h2>Login</h2>
+  <form id="loginForm">
+    <input type="text" id="username" placeholder="Username" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button type="submit" class="btn">Login</button>
+  </form>
+  <div id="loginMessage"></div>
+</div>
+
+<!-- Registration Section -->
+<div id="registrationSection">
+  <h2>Create Account</h2>
+  <form id="registrationForm">
+    <input type="text" id="newUsername" placeholder="New Username" required>
+    <input type="password" id="newPassword" placeholder="New Password" required>
+    <button type="submit" class="btn">Create Account</button>
+  </form>
+  <div id="registrationMessage"></div>
+</div>
+
+<!-- Task Section -->
+<div id="taskContainer">
+  <!-- Tasks will be added here -->
+</div>
+<button onclick="addTask()">Add Task</button>
+<a href="calendar.html">View Calendar</a>
+
+<script>
+  // Login Form Submit Event
+  document.getElementById('loginForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent default form submission
+    var username = document.getElementById('username').value;
+    var password = document.getElementById('password').value;
+
+    // Send login data to the server
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/login");
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        var response = JSON.parse(xhr.responseText);
+        if (xhr.status === 200) {
+          document.getElementById('loginMessage').textContent = "Login successful!";
+          document.getElementById('registrationSection').style.display = 'none'; // Hide registration section on successful login
+        } else {
+          document.getElementById('loginMessage').textContent = "Login failed. Please create an account.";
+          document.getElementById('registrationSection').style.display = 'block'; // Display registration section on failed login
+        }
+      }
+    };
+    xhr.send(JSON.stringify({ username: username, password: password }));
+  });
+
+  // Registration Form Submit Event
+  document.getElementById('registrationForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent default form submission
+    var newUsername = document.getElementById('newUsername').value;
+    var newPassword = document.getElementById('newPassword').value;
+
+    // Send registration data to the server
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/register");
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        var response = JSON.parse(xhr.responseText);
+        if (xhr.status === 202) {
+          document.getElementById('registrationMessage').textContent = "Account created successfully!";
+        } else {
+          document.getElementById('registrationMessage').textContent = "Failed to create account. Please try again.";
+        }
+      }
+    };
+    xhr.send(JSON.stringify({ username: newUsername, password: newPassword }));
+  });
+
+  function addTask() {
+    var taskContainer = document.getElementById('taskContainer');
+
+    // Create task container
+    var taskDiv = document.createElement('div');
+    taskDiv.classList.add('task');
+
+    // Task name input
+    var nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.placeholder = 'Task Name';
+
+    // Description input
+    var descriptionInput = document.createElement('input');
+    descriptionInput.type = 'text';
+    descriptionInput.placeholder = 'Description';
+
+    // Creation date input
+    var creationDateInput = document.createElement('input');
+    creationDateInput.type = 'date';
+
+    // Goal date input
+    var goalDateInput = document.createElement('input');
+    goalDateInput.type = 'date';
+
+    // Category select
+    var categorySelect = document.createElement('select');
+    var categories = ['Work', 'Study', 'Personal', 'Other'];
+    categories.forEach(category => {
+      var option = document.createElement('option');
+      option.text = category;
+      option.value = category;
+      categorySelect.appendChild(option);
+    });
+
+    // Save button
+    var saveButton = document.createElement('button');
+    saveButton.textContent = 'Save Task';
+    saveButton.classList.add('btn');
+    saveButton.onclick = function() {
+      saveTask(taskDiv);
+    };
+
+    // Add elements to task container
+    taskDiv.appendChild(nameInput);
+    taskDiv.appendChild(descriptionInput);
+    taskDiv.appendChild(creationDateInput);
+    taskDiv.appendChild(goalDateInput);
+    taskDiv.appendChild(categorySelect);
+    taskDiv.appendChild(saveButton);
+
+    // Append task container to taskContainer
+    taskContainer.appendChild(taskDiv);
+  }
+
+  function saveTask(taskDiv) {
+    var name = taskDiv.querySelector('input[type="text"]').value;
+    var description = taskDiv.querySelector('input[type="text"]').value;
+    var creationDate = taskDiv.querySelector('input[type="date"]').value;
+    var goalDate = taskDiv.querySelector('input[type="date"]').value;
+    var category = taskDiv.querySelector('select').value;
+
+    var task = {
+      name: name,
+      description: description,
+      creationDate: creationDate,
+      goalDate: goalDate,
+      category: category
+    };
+
+    // Send task data to the server
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/tasks");
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.send(JSON.stringify(task));
+  }
+</script>
+</body>
+</html>
