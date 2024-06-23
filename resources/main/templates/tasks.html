@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Tasks - Gamify</title>
+    <style>
+        /* CSS styles */
+        body, h1, h2, h3, p, ul, li {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f0f6;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #6a0dad;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #ffd700;
+        }
+
+        .content {
+            display: flex;
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .bubble {
+            flex: 1;
+            margin: 10px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .task {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .task input[type="text"],
+        .task input[type="date"],
+        .task select,
+        .progress-input {
+            width: calc(100% - 24px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #6a0dad;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+            font-size: 16px;
+        }
+
+        .progress-input {
+            width: calc(50% - 24px);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #6a0dad;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #4b0082;
+        }
+
+        footer {
+            background-color: #6a0dad;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        footer p {
+            margin: 0;
+        }
+        /* Added CSS for Remove Task button */
+        .remove-task-btn {
+            background-color: #ff0d0d;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Added CSS for Remove Task button on hover */
+        .remove-task-btn:hover {
+            background-color: #cc0000;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Manage Tasks</h1>
+    <nav>
+        <a href="index">Home</a> |
+        <a href="login">Login</a> |
+        <a href="taskHome">Tasks</a>
+    </nav>
+</header>
+
+<!-- Main content container -->
+<div class="content">
+    <!-- Add Task container -->
+    <div class="addTaskContainer" id ="addTaskContainer">
+        <h2>Add a Task</h2>
+        <form>
+            <input type="text" placeholder="Task Name" style="width: 80%;">
+            <br>
+            <input type="text" placeholder="Description" style="width: 80%;">
+            <br>
+            <input type="date" placeholder="Goal Date" style="width: 80%;">
+            <br>
+            <input type="text" class="progress-input" placeholder="Progress %" style="width: 40%;">
+            <br>
+            <select style="width: 80%;">
+                <option value="Work">Work</option>
+                <option value="Study">Study</option>
+                <option value="Personal">Personal</option>
+                <option value="Other">Other</option>
+            </select>
+            <br>
+            <button type="button" onclick="saveTask()">Save Task</button>
+        </form>
+    </div>
+
+    <!-- Fetch/Save Task container -->
+    <div class="bubble">
+        <h2>Saved Tasks</h2>
+        <button onclick="fetchTasks()">Fetch Tasks</button>
+        <div class="task-container" id="taskContainer">
+            <!-- Tasks will be added here -->
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>CS 222 Project by Kay, Max, Sathvik, and Kinjal</p>
+</footer>
+
+<script>
+    // Function to save a task
+    function saveTask() {
+        var taskDiv = document.getElementById('addTaskContainer');
+
+        var name = taskDiv.querySelector('input[type="text"]').value;
+        var description = taskDiv.querySelectorAll('input[type="text"]')[1].value;
+        var goalDate = taskDiv.querySelectorAll('input[type="date"]')[0].value;
+        var progress = taskDiv.querySelector('.progress-input').value;
+        var category = taskDiv.querySelector('select').value;
+
+        // Ensure that the task ID is omitted for new tasks
+        // var id = null; // Remove this line
+
+        // Check if any field is blank
+        if (name === "" || description === "" || goalDate === "" || progress === "") {
+            alert("Please fill in all fields.");
+            return;
+        }
+        var formattedGoalDate = new Date(goalDate).toISOString();
+        var task = {
+            username: localStorage.username,
+            password: localStorage.password,
+            name: name,
+            description: description,
+            goalDate: formattedGoalDate,
+            progress: progress,
+            category: category,
+        };
+
+        // Send task data to the server
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/addtasks");
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.send(JSON.stringify(task));
+        setTimeout(fetchTasks(), 500);
+    }
+
+
+    // Function to fetch tasks from the backend
+    function fetchTasks() {
+        var u = localStorage.username;
+        var p = localStorage.password;
+        var userCredentials = {
+            username: u,
+            password: p
+        };
+        var url = '/tasks?username=' + encodeURIComponent(u) + '&password=' + encodeURIComponent(p);
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    var tasks = JSON.parse(xhr.responseText);
+                    if(tasks != null){
+                        displayTasks(tasks);
+                    } else {
+                        console.error('Failed to fetch tasks: No tasks to fetch');
+                    }
+                } else {
+                    console.error('Failed to fetch tasks: ' + xhr.status);
+                }
+            }
+        };
+        xhr.open('GET', url);
+        xhr.send();
+    }
+
+    function displayTasks(tasks) {
+        var taskContainer = document.getElementById('taskContainer');
+        taskContainer.innerHTML = ''; // Clear existing tasks
+
+        tasks.forEach(function (task) {
+            // Parse and format the date
+            var parsedDate = new Date(task.completeGoal);
+            var formattedDate = (parsedDate.getMonth() + 1) + '/' + (parsedDate.getDate()+1) + '/' + parsedDate.getFullYear();
+            // Create task container
+            var taskDiv = document.createElement('div');
+            taskDiv.classList.add('task');
+            taskDiv.id = task.id;
+
+            // Task name, description, goal date, progress, and category elements
+
+            // Task name
+            var nameInput = document.createElement('input');
+            nameInput.type = 'text';
+            nameInput.value = task.name; // Corrected to use task.name
+            nameInput.disabled = true;
+
+            // Description
+            var descriptionInput = document.createElement('input');
+            descriptionInput.type = 'text';
+            descriptionInput.value = task.description;
+            descriptionInput.disabled = true;
+
+            // Goal date
+            var goalDateInput = document.createElement('input');
+            goalDateInput.type = 'text'; // Change input type to text
+            goalDateInput.value = formattedDate; // Use the formatted date
+            goalDateInput.disabled = true;
+
+            // Progress
+            var progressInput = document.createElement('input');
+            progressInput.type = 'text';
+            progressInput.value = task.progress;
+            progressInput.disabled = true;
+            progressInput.classList.add('progress-input');
+
+            // Category
+            var categorySelect = document.createElement('select');
+            var categories = ['Work', 'Study', 'Personal', 'Other'];
+            categories.forEach(category => {
+                var option = document.createElement('option');
+                option.text = category;
+                option.value = category;
+                categorySelect.appendChild(option);
+            });
+            categorySelect.value = task.category;
+            categorySelect.disabled = true;
+
+            // Add elements to task container
+            taskDiv.appendChild(nameInput);
+            taskDiv.appendChild(descriptionInput);
+            taskDiv.appendChild(goalDateInput);
+            taskDiv.appendChild(progressInput);
+            taskDiv.appendChild(categorySelect);
+
+            // Create Remove Task button
+            var removeTaskBtn = document.createElement('button');
+            removeTaskBtn.innerText = 'Remove Task';
+            removeTaskBtn.classList.add('remove-task-btn');
+            removeTaskBtn.addEventListener('click', function () {
+                removeTask(taskDiv, taskDiv.id);
+            });
+
+            // Append Remove Task button to task container
+            taskDiv.appendChild(removeTaskBtn);
+
+            // Append task container to taskContainer
+            taskContainer.appendChild(taskDiv);
+        });
+    }
+
+
+    // Function to remove a task
+    function removeTask(taskDiv, taskId) {
+        var username = localStorage.username;
+        var password = localStorage.password;
+
+        // Send a request to the backend to remove the task
+        var xhr = new XMLHttpRequest();
+        xhr.open("DELETE", "/removetask/" + taskId);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.send(JSON.stringify({ username: username, password: password }));
+
+        // Remove the task from the DOM if the removal was successful
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    taskDiv.remove();
+                } else {
+                    alert("Failed to remove task. Please try again later.");
+                }
+            }
+        };
+    }
+
+    // Call fetchTasks() when the page loads
+    window.onload = function() {
+        fetchTasks();
+    };
+</script>
+</body>
+</html>
